@@ -1,0 +1,77 @@
+---
+title: "PA3"
+author: "Eileen Blum"
+date: "`r Sys.Date()`"
+output: 
+  html_document: 
+    highlight: haddock
+    theme: yeti
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#EDA
+##1. Data
+Load the dataset of your choice and get information about its structure
+```{r, pa3_setup, echo=TRUE, message=FALSE, warning=FALSE}
+library(languageR)
+library(tidyverse)
+data(package = "languageR")
+str(durationsGe)
+```
+
+```{r}
+View(durationsGe)
+```
+
+##2. Tidy 
+Tidy the dataset (every variable gets a column, every observation occupies a single row), if necessary.
+```{r, warning=FALSE}
+my_durGe <- durationsGe %>%
+my_durGe %>%
+  select(-YearOfBirth) %>%
+  View() 
+```
+
+##3. Descriptive Statistics
+Calculate descriptive statistics of your choice.
+```{r}
+my_durGe %>%
+select(., NumberSegmentsOnset, DurationOfPrefix) %>%
+  cor.test(my_durGe$NumberSegmentsOnset, my_durGe$DurationOfPrefix)
+```
+```{r}
+my_durGe %>%
+select(., Frequency, SpeechRate) %>% 
+  cor.test(my_durGe$Frequency, my_durGe$SpeechRate)
+```
+
+##4. Model
+Select two continuous variables and fit a model to the data (bivariate regression).
+```{r, pa3_model}
+durGe_fit <- lm(DurationOfPrefix ~ SpeechRate, data = my_durGe)
+summary(durGe_fit)
+```
+
+```{r}
+confint(durGe_fit)
+```
+```{r}
+Slope: `r coefficients(durGe_fit)[2]`, CI: LB: `r confint(my_fit)[1, c(1,2)]`
+coefficients(durGe_fit)
+```
+
+##5. Plot
+Generate a plot that includes a regression line.
+```{r, pa3_plot}
+my_durGe %>%
+ggplot(., aes(x = SpeechRate, y = DurationOfPrefix)) +
+    geom_point() +
+    geom_smooth(method = 'lm')
+```
+
+##6. Observations
+Write up some general observations (1-2 paragraphs max)
+
