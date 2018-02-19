@@ -22,29 +22,23 @@ data(package = "languageR")
 str(durationsGe)
 ```
 
-```{r}
-View(durationsGe)
-```
-
 ##2. Tidy 
 Tidy the dataset (every variable gets a column, every observation occupies a single row), if necessary.
 ```{r, warning=FALSE}
 my_durGe <- durationsGe %>%
-my_durGe %>%
-  select(-YearOfBirth) %>%
-  View() 
+  select(-YearOfBirth)
 ```
 
 ##3. Descriptive Statistics
 Calculate descriptive statistics of your choice.
 ```{r}
 my_durGe %>%
-select(., NumberSegmentsOnset, DurationOfPrefix) %>%
+select(., NumberSegmentsOnset, DurationOfPrefix)
   cor.test(my_durGe$NumberSegmentsOnset, my_durGe$DurationOfPrefix)
 ```
 ```{r}
 my_durGe %>%
-select(., Frequency, SpeechRate) %>% 
+select(., Frequency, SpeechRate)
   cor.test(my_durGe$Frequency, my_durGe$SpeechRate)
 ```
 
@@ -58,20 +52,22 @@ summary(durGe_fit)
 ```{r}
 confint(durGe_fit)
 ```
-```{r}
-Slope: `r coefficients(durGe_fit)[2]`, CI: LB: `r confint(my_fit)[1, c(1,2)]`
-coefficients(durGe_fit)
-```
 
 ##5. Plot
 Generate a plot that includes a regression line.
 ```{r, pa3_plot}
 my_durGe %>%
 ggplot(., aes(x = SpeechRate, y = DurationOfPrefix)) +
+    labs(x = "Speech Rate", y = "Duration of Prefix") +
     geom_point() +
     geom_smooth(method = 'lm')
 ```
 
-##6. Observations
-Write up some general observations (1-2 paragraphs max)
+```{r}
+hist(residuals(durGe_fit))
+qqnorm(residuals(durGe_fit))
+qqline(residuals(durGe_fit))
+```
 
+##6. Observations
+It looks like speech rate is correlated with word frequency, but it is not clear whether the duration of a prefix is necessarily correlated with the number of segments in the onset. I am assuming this data consists of measurements of the number of segments in the onset of the prefix and not of the stem. The plot of speech rate and prefix durations further shows that the two measurements are not linearly related. While the longest prefix durations do occur at slower speech rates and the shortest durations at higher speech rates, the slope of the line is shallow and the points are widely dispersed away from that line so the two variables do not uniformly vary.
